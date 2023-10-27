@@ -1,23 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const port = 3000;
-const { verifyToken } = require("./controller/userController"); // Import the verifyToken middleware
-const sequelize = require("./connection/db"); // Import your Sequelize instance
-const User = require("./models/User"); // Import your User model
+const { verifyToken } = require("./middleware/jwt"); // Import the verifyToken middleware
+const sequelize = require("./connection/db"); // Import Sequelize instance
+const User = require("./models/User"); // Import User model
 app.use(express.json());
 
-// Initialize Sequelize and define models
-sequelize
-  .sync()
-  .then(() => {
-    console.log("Database synced.");
-  })
-  .catch((err) => {
-    console.error("Database synchronization error:", err);
-  });
-
-// Import your route files
+// Import route files
 const pingRoute = require("./routes/pingRoute");
 const nmapRoute = require("./routes/nmapRoute");
 const nslookupRoute = require("./routes/nslookupRoute");
@@ -35,6 +24,10 @@ app.use("/api/whatweb", whatwebRoute);
 app.use("/api/password-strength", verifyToken, passwordStrengthRoute);
 app.use("/api/user", userRoute);
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+app.get("/", (req, res) => {
+  return res.json("Welcome EmptyLeg API Library");
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`App listening on port ${process.env.PORT}`);
 });

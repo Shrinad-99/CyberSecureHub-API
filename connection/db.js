@@ -24,4 +24,14 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
+// Initialize Sequelize and define models
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Database synced.");
+  })
+  .catch((err) => {
+    console.error("Database synchronization error:", err);
+  });
+
 module.exports = sequelize;
